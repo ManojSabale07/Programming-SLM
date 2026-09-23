@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.class
+venv/
+.venv/
+env/
+.env
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large datasets
+*.tar
+*.tar.gz
+*.zip
+*.bin
+*.npy
+*.npz
+data/raw/
+data/processed/
+token_shards_150m/
+Project_CodeNet/
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+checkpoints/
+
+# Logs / outputs
+logs/
+runs/
+outputs/
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Temporary
+*.tmp
+*.temp
