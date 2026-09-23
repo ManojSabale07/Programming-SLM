@@ -1,0 +1,430 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Programming SLM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=2">
+</head>
+
+<body>
+    <div class="app">
+        <header class="topbar">
+            <div class="brand"><span class="logo">&lt;/&gt;</span><span class="brand-name">Programming SLM</span><span
+                    class="badge badge--version">v0.1-alpha</span></div>
+            <div class="model-chip">decoder-only · 8L · 512d · Python</div>
+            <div class="top-actions"><button class="btn btn--icon" title="Settings" aria-label="Settings">⚙</button><button
+                    class="btn btn--icon" title="Documentation" aria-label="Documentation">?</button><button class="btn btn--icon"
+                    title="Dark theme" aria-label="Toggle theme">◐</button><button class="profile-button" title="User profile" aria-label="User profile">AS</button></div>
+        </header>
+        <div class="workspace" id="workspace">
+            <aside class="sidebar"><div class="sidebar-brand"><span class="logo">&lt;/&gt;</span><span class="sidebar-brand-name">Programming-SLM</span></div><button class="btn btn--primary new-chat-btn" id="newChatBtn">+ New chat</button><label class="sidebar-search"><span>⌕</span><input id="chatSearch" type="search" placeholder="Search chats" aria-label="Search chats"></label><button class="btn btn--icon sidebar-toggle" id="sidebarToggle"
+                    title="Collapse sidebar">‹</button>
+                <nav class="nav" id="nav"><button class="nav-item active" data-view="complete"
+                        title="Code Complete"><span class="nav-icon">◈</span><span class="nav-label">Code
+                            Complete</span></button><button class="nav-item" data-view="generate"
+                        title="Code Generate"><span class="nav-icon">⊞</span><span class="nav-label">Code
+                            Generate</span></button><button class="nav-item" data-view="explain"
+                        title="Code Explain"><span class="nav-icon">✎</span><span class="nav-label">Code
+                            Explain</span></button><button class="nav-item" data-view="debug"
+                        title="Debug / Repair"><span class="nav-icon">⬡</span><span class="nav-label">Debug /
+                            Repair</span></button><button class="nav-item" data-view="infill"
+                        title="Infill (coming soon)"><span class="nav-icon">≋</span><span
+                            class="nav-label">Infill</span><span class="badge badge--soon">Soon</span></button>
+                    <div class="section-label">TODAY</div>
+                    <div class="conversation-list" id="conversationList"><button class="conversation-item active" data-conversation="current">New coding session</button><button class="conversation-item" data-conversation="python-api">Python API</button><button class="conversation-item" data-conversation="debug-auth">Debug Auth</button></div>
+                    <div class="section-label">TOOLS</div>
+                    <div class="separator"></div><button class="nav-item" data-view="history"
+                        title="Session History"><span class="nav-icon">≡</span><span class="nav-label">Session
+                            History</span></button><button class="nav-item" data-view="model" title="Model Info"><span
+                            class="nav-icon">⛁</span><span class="nav-label">Model Info</span></button><button
+                        class="nav-item" data-view="evaluation" title="Evaluation"><span class="nav-icon">▥</span><span
+                            class="nav-label">Evaluation</span></button>
+                </nav>
+                <div class="sidebar-bottom"><button class="nav-item" title="Documentation"><span
+                            class="nav-icon">▤</span><span class="nav-label">Documentation</span></button><button
+                        class="nav-item" id="aboutBtn" title="About SLM"><span class="nav-icon">ⓘ</span><span
+                            class="nav-label">About SLM</span></button></div>
+            </aside>
+            <main class="main" id="main">
+                <div class="workspace-banner" id="workspaceBanner"><div><span class="eyebrow">AI CODING WORKSPACE</span><strong>Build with Programming-SLM</strong></div><span class="workspace-hint">Local preview · no backend connected</span></div>
+                <section class="view active" id="view-complete">
+                    <div class="workspace-view">
+                        <div class="panel">
+                            <div class="panel-header"><span>INPUT</span><span
+                                    class="badge badge--lang">Python</span><span class="spacer"></span>
+                                <div class="mode-switch"><button class="active"
+                                        data-mode="complete">Complete</button><button
+                                        data-mode="generate">Generate</button><button
+                                        data-mode="explain">Explain</button></div>
+                            </div>
+                            <div class="code-wrap">
+                                <div class="line-numbers" id="lineNumbers"></div><textarea class="code-editor"
+                                    id="inputEditor" spellcheck="false" aria-label="Python input">def factorial(n):
+    if n == 0:
+        return 1</textarea><span class="char-count" id="charCount">0 chars</span>
+                            </div>
+                        </div>
+                        <div class="action-bar">
+                            <div class="action-group"><button class="btn btn--ghost" id="paramsBtn"
+                                    title="Generation parameters">⚙ Parameters</button></div><button
+                                class="btn btn--primary" id="runBtn" title="Run SLM (Ctrl+Enter)">▶ Run SLM</button>
+                            <div class="action-group"><button class="btn btn--ghost" id="clearBtn"
+                                    title="Clear editor (Ctrl+L)">⊘ Clear</button><button class="btn btn--ghost"
+                                    id="exportBtn" title="Export output (Ctrl+E)">⬇ Export</button></div>
+                        </div>
+                        <div class="param-panel" id="paramPanel">
+                            <div class="param-grid"><label class="param">Temperature <strong
+                                        id="tempValue">0.8</strong><input id="temperature" type="range" min="0.1"
+                                        max="2" step="0.1" value="0.8"></label><label class="param">Max Tokens <strong
+                                        id="tokensValue">128</strong><input id="maxTokens" type="range" min="32"
+                                        max="512" step="1" value="128"></label><label class="param">Top-k <input
+                                        id="topK" type="number" value="50"></label><label class="param">Top-p <input
+                                        id="topP" type="number" value="0.9" step="0.1"></label>
+                                <div class="decode"><span>Decoding</span><button
+                                        class="active">Greedy</button><button>Sampling</button><button>Top-k</button><button>Top-p</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="output-panel panel">
+                            <div class="panel-header"><span>OUTPUT</span><span class="badge badge--status ok"
+                                    id="generationStatus">✓ Ready</span><span class="spacer"></span><span
+                                    id="tokenCount">128 tokens</span><button class="btn copy-btn" id="copyBtn"
+                                    title="Copy output">▣ Copy</button></div>
+                            <div class="stream-line" id="streamLine"></div>
+                            <div class="output-body" id="outputBody"></div>
+                        </div>
+                    </div>
+                </section>
+                <section class="view" id="view-explain">
+                    <div class="view-heading">
+                        <div>
+                            <h1>Code Explain</h1>
+                            <p>Understand the intent and tradeoffs in your Python code.</p>
+                        </div><span class="badge badge--lang">Python</span>
+                    </div>
+                    <div class="explain-grid">
+                        <div class="code-wrap">
+                            <div class="line-numbers"></div><textarea class="code-editor" id="explainEditor"
+                                spellcheck="false">def factorial(n):
+    if n == 0:
+        return 1
+    return n * factorial(n - 1)</textarea>
+                        </div>
+                        <article class="explanation"><span class="explain-chip">FUNCTION</span>
+                            <h3>Recursive factorial computation</h3>
+                            <p>The function calculates the factorial of a non-negative integer by reducing the problem
+                                to smaller values of <strong>n</strong>.</p><span class="explain-chip">LOGIC</span>
+                            <p>The base case returns 1 when <strong>n == 0</strong>. Otherwise, the recursive case
+                                multiplies n by the factorial of n - 1.</p><span class="explain-chip">COMPLEXITY</span>
+                            <p>Time is <strong>O(n)</strong> and space is <strong>O(n)</strong> because the call stack
+                                grows with each recursive call.</p>
+                        </article>
+                    </div>
+                </section>
+                <section class="view" id="view-debug">
+                    <div class="view-heading">
+                        <div>
+                            <h1>Debug / Repair</h1>
+                            <p>Find the failure, then inspect the corrected version.</p>
+                        </div><span class="badge badge--status warn">⚠ Analysis ready</span>
+                    </div>
+                    <div class="debug-stack">
+                        <div class="code-wrap">
+                            <div class="line-numbers"></div><textarea class="code-editor" spellcheck="false">def calculate_sum(items):
+    for item in items:
+        total += item
+    return total</textarea>
+                        </div>
+                        <div class="bug-panel"><b>🔴 BUG DETECTED · Line 3</b><br>UnboundLocalError:
+                            <code>'total'</code> referenced before assignment<br><b>💡 FIX APPLIED:</b> Initialize
+                            <code>total = 0</code> before the loop.
+                        </div>
+                        <div class="code-wrap">
+                            <div class="line-numbers"></div><textarea class="code-editor" spellcheck="false" readonly>def calculate_sum(items):
+    total = 0
+    for item in items:
+        total += item
+    return total</textarea>
+                        </div>
+                    </div>
+                </section>
+                <section class="view" id="view-model">
+                    <div class="view-heading">
+                        <div>
+                            <h1>Model Info</h1>
+                            <p>Architecture and training snapshot for the local programming model.</p>
+                        </div>
+                    </div>
+                    <div class="cards">
+                        <div class="info-card">
+                            <h3>Architecture</h3>
+                            <p>Decoder-Only Transformer</p>
+                            <p>Layers: 8 · Heads: 8 · d_model: 512</p>
+                            <p>d_ff: 2048 · Context: 512 tokens</p>
+                            <p>Parameters: ~25M</p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Dataset</h3>
+                            <p>Project CodeNet (IBM Research)</p>
+                            <p>Language: Python (filtered)</p>
+                            <p>Status: Accepted submissions only</p>
+                            <p>~2.8M samples after preprocessing</p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Training</h3>
+                            <p>Objective: Causal Language Modeling</p>
+                            <p>Optimizer: AdamW · LR: 3e-4</p>
+                            <p>Batch: 32 · Epochs: 10</p>
+                            <p>Loss fn: Cross-Entropy</p>
+                        </div>
+                        <div class="info-card">
+                            <h3>Tokenizer</h3>
+                            <p>Type: BPE (Byte Pair Encoding)</p>
+                            <p>Vocab size: 8,000</p>
+                            <p>Avg tokens/sample: 186</p>
+                            <p>Library: HuggingFace Tokenizers</p>
+                        </div>
+                        <div class="info-card wide">
+                            <h3>Training Loss</h3><svg class="chart" viewBox="0 0 700 135" preserveAspectRatio="none">
+                                <polyline
+                                    points="15,20 90,34 165,48 240,57 315,71 390,78 465,93 540,102 615,111 685,120">
+                                </polyline>
+                                <circle cx="15" cy="20" r="3" />
+                                <circle cx="165" cy="48" r="3" />
+                                <circle cx="315" cy="71" r="3" />
+                                <circle cx="465" cy="93" r="3" />
+                                <circle cx="685" cy="120" r="3" /><text x="10" y="133">1</text><text x="340"
+                                    y="133">5</text><text x="675" y="133">10 epochs</text>
+                            </svg>
+                        </div>
+                    </div>
+                </section>
+                <section class="view" id="view-evaluation">
+                    <div class="view-heading">
+                        <div>
+                            <h1>Evaluation</h1>
+                            <p>Current validation metrics and generation quality.</p>
+                        </div><span class="badge badge--status ok">✓ Latest run</span>
+                    </div>
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">◎</div>
+                            <div class="metric-label">Training Loss</div>
+                            <div class="metric-value good">1.84</div>
+                            <div class="metric-sub">Cross-entropy</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">≋</div>
+                            <div class="metric-label">Val Loss</div>
+                            <div class="metric-value warn">2.12</div>
+                            <div class="metric-sub">Held-out set</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">⬡</div>
+                            <div class="metric-label">Perplexity</div>
+                            <div class="metric-value warn">8.31</div>
+                            <div class="metric-sub">Lower is better</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">✓</div>
+                            <div class="metric-label">pass@1</div>
+                            <div class="metric-value good">34.2%</div>
+                            <div class="metric-sub">HumanEval subset</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">⚡</div>
+                            <div class="metric-label">Tokens/sec</div>
+                            <div class="metric-value" style="color:var(--accent-cyan)">47</div>
+                            <div class="metric-sub">Local inference</div>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Benchmark</th>
+                                    <th>Delta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>pass@1</td>
+                                    <td>34.2%</td>
+                                    <td>CodeNet baseline</td>
+                                    <td class="good">+6.8%</td>
+                                </tr>
+                                <tr>
+                                    <td>Validation loss</td>
+                                    <td>2.12</td>
+                                    <td>Target &lt; 2.50</td>
+                                    <td class="good">-0.38</td>
+                                </tr>
+                                <tr>
+                                    <td>Perplexity</td>
+                                    <td>8.31</td>
+                                    <td>Target &lt; 10</td>
+                                    <td class="good">-1.69</td>
+                                </tr>
+                                <tr>
+                                    <td>Syntax validity</td>
+                                    <td>91.6%</td>
+                                    <td>Target 95%</td>
+                                    <td class="bad">-3.4%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                <section class="view" id="view-history">
+                    <div class="view-heading">
+                        <div>
+                            <h1>Session History</h1>
+                            <p>Restore a previous generation and continue iterating.</p>
+                        </div><span class="badge" id="historyCount">0 sessions</span>
+                    </div>
+                    <div class="history" id="historyList">
+                        <div class="info-copy">No sessions yet. Run the model to create your first generation.</div>
+                    </div>
+                </section>
+                <section class="view" id="view-infill">
+                    <div class="view-heading">
+                        <div>
+                            <h1>Infill</h1>
+                            <p>Fill-in-the-middle generation is planned for a future model release.</p>
+                        </div><span class="badge badge--soon">Soon</span>
+                    </div>
+                    <div class="cards">
+                        <div class="info-card wide">
+                            <h3>FIM mode is not available yet</h3>
+                            <p>Code completion, generation, explanation, and repair are ready in this preview. The
+                                tokenizer and model interfaces are being prepared for infill prompts.</p>
+                        </div>
+                    </div>
+                </section>
+                <form class="shell-composer" id="shellComposer"><label for="composerInput" class="sr-only">Message Programming-SLM</label><textarea id="composerInput" rows="2" placeholder="Ask Programming-SLM to write, explain, or debug code..." spellcheck="false"></textarea><div class="composer-toolbar"><div class="composer-options"><select id="composerModel" aria-label="Model"><option>Programming-SLM</option></select><select id="composerLanguage" aria-label="Programming language"><option>Python</option><option>JavaScript</option><option>TypeScript</option><option>Go</option></select><button type="button" class="btn btn--ghost" id="composerSettings">⚙ Settings</button></div><div class="composer-actions"><button type="button" class="btn btn--ghost composer-stop" id="composerStop" disabled>Stop</button><button type="submit" class="btn btn--primary" id="composerSend">Send ↵</button></div></div></form>
+            </main>
+            <aside class="right-panel"><button class="btn btn--icon right-toggle" id="rightToggle"
+                    title="Collapse metrics panel">›</button>
+                <div class="info-section">
+                    <div class="info-title"><span>MODEL STATUS</span><span class="badge badge--status ok">●
+                            READY</span></div>
+                    <div class="info-copy">Model loaded, weights initialized<br>Last run: <span
+                            id="lastRun">0.34s</span></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title"><span>LIVE GENERATION</span><span id="elapsed">0.00s</span></div>
+                    <div class="progress"><span id="progressBar"></span></div>
+                    <div class="stat-row">
+                        <div class="mini-stat"><b id="rightTokens">0 / 128</b><span>tokens</span></div>
+                        <div class="mini-stat"><b id="remaining">--</b><span>remaining</span></div>
+                    </div>
+                    <div class="metric-big"><span id="speed">47</span><small>tok/s</small></div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">TOKENIZER INFO</div>
+                    <div class="stat-row">
+                        <div class="mini-stat"><b id="inputTokens">12</b><span>input tokens</span></div>
+                        <div class="mini-stat"><b id="outputTokens">128</b><span>output tokens</span></div>
+                    </div>
+                    <div class="info-copy" style="margin-top:9px">Compression ratio <span
+                            style="color:var(--accent-purple)">4.2 chars/token</span></div>
+                    <table class="token-table">
+                        <tbody>
+                            <tr>
+                                <td>return</td>
+                                <td>18.4%</td>
+                            </tr>
+                            <tr>
+                                <td>n</td>
+                                <td>12.1%</td>
+                            </tr>
+                            <tr>
+                                <td>factorial</td>
+                                <td>8.7%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="info-section">
+                    <div class="info-title accordion" id="shortcutToggle">⌨ SHORTCUTS <span>+</span></div>
+                    <div class="accordion-content">Ctrl+Enter → Run SLM
+                        Ctrl+L → Clear
+                        Ctrl+E → Export
+                        Tab → 4-space indent</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">GENERATION SETTINGS</div>
+                    <div class="info-copy">Temperature <span style="float:right;color:var(--text-primary)"
+                            id="summaryTemp">0.8</span><br>Max tokens <span
+                            style="float:right;color:var(--text-primary)" id="summaryTokens">128</span><br>Top-k <span
+                            style="float:right;color:var(--text-primary)">50</span><br>Top-p <span
+                            style="float:right;color:var(--text-primary)">0.9</span></div>
+                </div>
+            </aside>
+        </div>
+        <footer class="statusbar"><span>🐍 Python 3.11</span><span>⚡ PyTorch</span><span>⛁ CodeNet</span><span>◈
+                Decoder-Only · 8L</span><span>pass@1: 34.2%</span><span class="status-spacer"></span><span>Last run: <b
+                    id="statusRun">0.34s</b></span><span>Tokens: <b id="statusTokens">128</b></span></footer>
+    </div>
+    <div class="modal-backdrop" id="aboutModal" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+        <section class="modal">
+            <h2 id="aboutTitle">About Programming SLM</h2>
+            <p>A compact decoder-only Transformer trained on accepted Python submissions from Project CodeNet. This
+                frontend previews local completion, generation, explanation, and repair workflows.</p>
+            <div class="modal-actions"><button class="btn btn--primary" id="closeAbout"
+                    title="Close About dialog">Close</button></div>
+        </section>
+    </div>
+    <script>
+        // ── STATE ──────────────────────────────────────────
+        const state = { mode: 'complete', generating: false, timer: null, started: 0, output: '    return n * factorial(n - 1)\n\n# Generated by Programming SLM\n# Tokens: 18 | Time: 0.34s | Perplexity: 6.2', history: [] };
+        const mockOutputs = { complete: state.output, generate: 'def binary_search(arr, target):\n    left, right = 0, len(arr) - 1\n    while left <= right:\n        mid = (left + right) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            left = mid + 1\n        else:\n            right = mid - 1\n    return -1', explain: 'This function implements recursive factorial calculation.\n\nBase case: When n equals 0, returns 1.\nRecursive case: Returns n multiplied by factorial(n-1).\n\nTime complexity: O(n) | Space: O(n)', debug: '# Bug identified on line 3:\n# Variable total used before assignment\n\n# Fixed version:\ndef calculate_sum(items):\n    total = 0\n    for item in items:\n        total += item\n    return total' };
+        // ── DOM REFERENCES ─────────────────────────────────
+        const $ = id => document.getElementById(id); const workspace = $('workspace'), editor = $('inputEditor'), output = $('outputBody');
+        // ── SYNTAX HIGHLIGHTER ─────────────────────────────
+        function escapeHtml(value) { return value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char])); }
+        function highlightPython(code) {
+            const safe = escapeHtml(code);
+            const tokenPattern = /("""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|#.*|\b(?:def|return|if|else|elif|for|while|import|class|try|except|with|as|in|not|and|or|True|False|None)\b|\b\d+(?:\.\d+)?\b|\b(?:print|len|range|list|dict|int|str|float)\b)/gm;
+            return safe.replace(tokenPattern, token => {
+                if (token.startsWith('#')) return `<span class="cmt">${token}</span>`;
+                if (/^("""|'''|"|')/.test(token)) return `<span class="str">${token}</span>`;
+                if (/^\d/.test(token)) return `<span class="num">${token}</span>`;
+                if (/^(print|len|range|list|dict|int|str|float)$/.test(token)) return `<span class="bi">${token}</span>`;
+                return `<span class="kw">${token}</span>`;
+            });
+        }
+        function updateLines() { const lines = editor.value.split('\n').length; $('lineNumbers').textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n'); $('charCount').textContent = `${editor.value.length} chars`; $('inputTokens').textContent = Math.max(1, Math.ceil(editor.value.length / 4)); }
+        function renderOutput(text = state.output, streaming = false) { output.innerHTML = streaming ? escapeHtml(text) + '<span class="cursor"></span>' : highlightPython(text); }
+        // ── GENERATION ENGINE (mock) ───────────────────────
+        function triggerRun() { if (state.generating) { stopGeneration(); return; } state.generating = true; state.started = performance.now(); let text = mockOutputs[state.mode] || mockOutputs.complete; let index = 0; $('runBtn').innerHTML = '⏸ Stop'; $('runBtn').classList.add('btn--stop'); $('generationStatus').textContent = '● Generating'; $('generationStatus').className = 'badge badge--status warn'; $('streamLine').classList.remove('done'); $('progressBar').style.width = '0%'; renderOutput('', true); clearInterval(state.timer); state.timer = setInterval(() => { index++; state.output = text.slice(0, index); renderOutput(state.output, true); const progress = Math.round(index / text.length * 100); $('progressBar').style.width = `${progress}%`; $('rightTokens').textContent = `${Math.ceil(index / 4)} / 128`; $('statusTokens').textContent = Math.ceil(index / 4); $('remaining').textContent = `${Math.max(0, Math.ceil((text.length - index) * 25 / 1000))}s`; if (index >= text.length) finishGeneration(); }, 25); state.history.unshift({ id: Date.now(), time: new Date().toLocaleTimeString([], { hour12: false }), mode: state.mode, input: editor.value, output: text, tokensIn: Math.max(1, Math.ceil(editor.value.length / 4)), tokensOut: Math.ceil(text.length / 4), duration: null }); }
+        function finishGeneration() { clearInterval(state.timer); state.timer = null; state.generating = false; renderOutput(state.output); $('runBtn').innerHTML = '▶ Run SLM'; $('runBtn').classList.remove('btn--stop'); $('generationStatus').textContent = '✓ Done'; $('generationStatus').className = 'badge badge--status ok'; $('streamLine').classList.add('done'); const duration = ((performance.now() - state.started) / 1000).toFixed(2); $('lastRun').textContent = `${duration}s`; $('statusRun').textContent = `${duration}s`; $('elapsed').textContent = `${duration}s`; $('outputTokens').textContent = Math.ceil(state.output.length / 4); renderHistory(); }
+        function stopGeneration() { clearInterval(state.timer); state.timer = null; state.generating = false; $('runBtn').innerHTML = '▶ Run SLM'; $('runBtn').classList.remove('btn--stop'); $('generationStatus').textContent = 'Stopped'; $('generationStatus').className = 'badge badge--status warn'; renderOutput(state.output); }
+        // ── SIDEBAR CONTROLLER ─────────────────────────────
+        function showView(view) { state.mode = view; const renderedView = view === 'generate' ? 'complete' : view; document.querySelectorAll('.nav-item[data-view]').forEach(item => item.classList.toggle('active', item.dataset.view === view)); document.querySelectorAll('.view').forEach(item => item.classList.toggle('active', item.id === `view-${renderedView}`)); if (view === 'complete' || view === 'generate') { document.querySelectorAll('.mode-switch button').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === view)); } }
+        // ── PANEL CONTROLLER ───────────────────────────────
+        $('sidebarToggle').onclick = () => { workspace.classList.toggle('sidebar-collapsed'); $('sidebarToggle').textContent = workspace.classList.contains('sidebar-collapsed') ? '›' : '‹'; }; $('rightToggle').onclick = () => { workspace.classList.toggle('right-collapsed'); $('rightToggle').textContent = workspace.classList.contains('right-collapsed') ? '‹' : '›'; }; document.querySelectorAll('.nav-item[data-view]').forEach(item => item.onclick = () => showView(item.dataset.view));
+        // ── PARAMETER PANEL ────────────────────────────────
+        $('paramsBtn').onclick = () => $('paramPanel').classList.toggle('open'); $('temperature').oninput = e => { $('tempValue').textContent = e.target.value; $('summaryTemp').textContent = e.target.value; }; $('maxTokens').oninput = e => { $('tokensValue').textContent = e.target.value; $('summaryTokens').textContent = e.target.value; }; document.querySelectorAll('.decode button').forEach(button => button.onclick = () => { document.querySelectorAll('.decode button').forEach(item => item.classList.remove('active')); button.classList.add('active'); });
+        // ── SESSION HISTORY ────────────────────────────────
+        function renderHistory() { $('historyCount').textContent = `${state.history.length} session${state.history.length === 1 ? '' : 's'}`; $('historyList').innerHTML = state.history.length ? state.history.map(item => `<div class="history-row"><span class="history-time">${item.time}</span><span class="history-preview">${escapeHtml(item.input || '# empty input')}</span><span class="badge badge--lang">${item.mode}</span><span class="history-time">${item.tokensOut} tokens</span><button class="btn btn--ghost" data-restore="${item.id}">↩ Restore</button></div>`).join('') : '<div class="info-copy">No sessions yet. Run the model to create your first generation.</div>'; document.querySelectorAll('[data-restore]').forEach(button => button.onclick = () => { const item = state.history.find(entry => entry.id == button.dataset.restore); if (item) { editor.value = item.input; state.output = item.output; showView('complete'); updateLines(); renderOutput(); } }); }
+        // ── EVALUATION VIEW ────────────────────────────────
+        $('copyBtn').onclick = async () => { await navigator.clipboard?.writeText(state.output); $('copyBtn').textContent = '✓ Copied'; setTimeout(() => $('copyBtn').textContent = '▣ Copy', 1500); }; $('exportBtn').onclick = () => { const blob = new Blob([state.output], { type: 'text/plain' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'slm-output.py'; link.click(); URL.revokeObjectURL(link.href); };
+        // ── KEYBOARD SHORTCUTS ─────────────────────────────
+        editor.addEventListener('input', updateLines); editor.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); const start = e.target.selectionStart; const end = e.target.selectionEnd; e.target.value = e.target.value.slice(0, start) + '    ' + e.target.value.slice(end); e.target.selectionStart = e.target.selectionEnd = start + 4; updateLines(); } }); document.addEventListener('keydown', e => { if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); triggerRun(); } if (e.ctrlKey && e.key.toLowerCase() === 'l') { e.preventDefault(); editor.value = ''; updateLines(); } if (e.ctrlKey && e.key.toLowerCase() === 'e') { e.preventDefault(); $('exportBtn').click(); } if (e.key === 'Escape') $('aboutModal').classList.remove('open'); }); $('shortcutToggle').onclick = () => $('shortcutToggle').classList.toggle('open'); $('clearBtn').onclick = () => { editor.value = ''; updateLines(); }; $('runBtn').onclick = triggerRun; $('aboutBtn').onclick = () => $('aboutModal').classList.add('open'); $('closeAbout').onclick = () => $('aboutModal').classList.remove('open'); $('aboutModal').onclick = e => { if (e.target.id === 'aboutModal') $('aboutModal').classList.remove('open'); };
+        // ── INIT ───────────────────────────────────────────
+        document.querySelectorAll('.mode-switch button').forEach(button => button.onclick = () => { state.mode = button.dataset.mode; showView(button.dataset.mode); }); updateLines(); renderOutput(); renderHistory();
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>
