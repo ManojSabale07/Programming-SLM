@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Assistant</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar" id="sidebar">
+
+        <!-- Logo -->
+        <div class="sidebar-header">
+
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+
+                <span class="brand-name">AI Assistant</span>
+            </div>
+
+            <button class="icon-btn sidebar-toggle" id="sidebarToggle">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+        </div>
+
+
+        <!-- New Chat -->
+        <button class="new-chat-btn" id="newChatBtn">
+
+            <i class="fa-solid fa-plus"></i>
+
+            <span>New Chat</span>
+
+        </button>
+
+
+        <!-- Search -->
+        <div class="search-box">
+
+            <i class="fa-solid fa-magnifying-glass"></i>
+
+            <input
+                type="text"
+                id="searchHistory"
+                placeholder="Search chats..."
+            >
+
+        </div>
+
+
+        <!-- Chat History -->
+        <div class="history-section">
+
+            <div class="history-title">
+                <span>Recent</span>
+            </div>
+
+            <div class="chat-history" id="chatHistory">
+
+                <div class="history-item active">
+
+                    <div class="history-icon">
+                        <i class="fa-regular fa-message"></i>
+                    </div>
+
+                    <span>Welcome to AI Assistant</span>
+
+                    <button class="history-more">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="history-item">
+
+                    <div class="history-icon">
+                        <i class="fa-regular fa-message"></i>
+                    </div>
+
+                    <span>Machine Learning Discussion</span>
+
+                    <button class="history-more">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="history-item">
+
+                    <div class="history-icon">
+                        <i class="fa-regular fa-message"></i>
+                    </div>
+
+                    <span>Python Project</span>
+
+                    <button class="history-more">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="history-item">
+
+                    <div class="history-icon">
+                        <i class="fa-regular fa-message"></i>
+                    </div>
+
+                    <span>NLP Learning</span>
+
+                    <button class="history-more">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Sidebar Bottom -->
+        <div class="sidebar-bottom">
+
+            <!-- Mode Toggle -->
+            <div class="mode-container">
+
+                <div class="mode-label">
+
+                    <i class="fa-solid fa-moon"></i>
+
+                    <span>Dark Mode</span>
+
+                </div>
+
+                <label class="switch">
+
+                    <input type="checkbox" id="themeToggle">
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <!-- User -->
+            <div class="user-profile">
+
+                <div class="avatar">
+                    M
+                </div>
+
+                <div class="user-info">
+
+                    <span class="user-name">
+                        User
+                    </span>
+
+                    <span class="user-status">
+                        Free Plan
+                    </span>
+
+                </div>
+
+                <button class="icon-btn">
+
+                    <i class="fa-solid fa-ellipsis"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- Top Navigation -->
+
+        <header class="top-navbar">
+
+            <div class="mobile-brand">
+
+                <div class="brand-icon">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+
+                <span>AI Assistant</span>
+
+            </div>
+
+
+            <div class="model-selector">
+
+                <span class="model-name">
+                    AI Assistant
+                </span>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+
+            <div class="navbar-actions">
+
+                <button
+                    class="icon-btn"
+                    title="New Chat"
+                    id="mobileNewChat"
+                >
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+
+                <button
+                    class="icon-btn"
+                    title="Settings"
+                >
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CHAT WINDOW ================= -->
+
+        <section class="chat-window" id="chatWindow">
+
+
+            <!-- Welcome Screen -->
+
+            <div class="welcome-screen" id="welcomeScreen">
+
+                <div class="welcome-icon">
+
+                    <i class="fa-solid fa-sparkles"></i>
+
+                </div>
+
+                <h1>
+                    How can I help you?
+                </h1>
+
+                <p>
+                    Ask anything, explore ideas, or start a conversation.
+                </p>
+
+
+                <!-- Suggestions -->
+
+                <div class="suggestions">
+
+                    <button class="suggestion-card">
+
+                        <i class="fa-solid fa-code"></i>
+
+                        <div>
+                            <strong>Write Code</strong>
+                            <span>Generate and explain code</span>
+                        </div>
+
+                    </button>
+
+
+                    <button class="suggestion-card">
+
+                        <i class="fa-solid fa-lightbulb"></i>
+
+                        <div>
+                            <strong>Brainstorm</strong>
+                            <span>Explore ideas and solutions</span>
+                        </div>
+
+                    </button>
+
+
+                    <button class="suggestion-card">
+
+                        <i class="fa-solid fa-graduation-cap"></i>
+
+                        <div>
+                            <strong>Learn</strong>
+                            <span>Understand difficult concepts</span>
+                        </div>
+
+                    </button>
+
+
+                    <button class="suggestion-card">
+
+                        <i class="fa-solid fa-file-lines"></i>
+
+                        <div>
+                            <strong>Analyze</strong>
+                            <span>Analyze text and information</span>
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Messages -->
+
+            <div
+                class="messages-container"
+                id="messagesContainer"
+            >
+
+                <!-- Messages will be added dynamically -->
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MESSAGE INPUT ================= -->
+
+        <div class="composer-wrapper">
+
+            <div class="composer">
+
+                <!-- Attachment -->
+
+                <button
+                    class="composer-btn"
+                    title="Attach file"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+
+
+                <!-- Input -->
+
+                <textarea
+                    id="messageInput"
+                    placeholder="Message AI Assistant..."
+                    rows="1"
+                ></textarea>
+
+
+                <!-- Send -->
+
+                <button
+                    class="send-btn"
+                    id="sendBtn"
+                    title="Send message"
+                >
+
+                    <i class="fa-solid fa-arrow-up"></i>
+
+                </button>
+
+            </div>
+
+
+            <div class="composer-footer">
+
+                <span>
+                    AI Assistant can make mistakes. Check important information.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    /* ==========================================
+       ELEMENTS
+    ========================================== */
+
+    const messageInput =
+        document.getElementById("messageInput");
+
+    const sendBtn =
+        document.getElementById("sendBtn");
+
+    const messagesContainer =
+        document.getElementById("messagesContainer");
+
+    const welcomeScreen =
+        document.getElementById("welcomeScreen");
+
+    const newChatBtn =
+        document.getElementById("newChatBtn");
+
+    const mobileNewChat =
+        document.getElementById("mobileNewChat");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const sidebarToggle =
+        document.getElementById("sidebarToggle");
+
+    const themeToggle =
+        document.getElementById("themeToggle");
+
+    const chatHistory =
+        document.getElementById("chatHistory");
+
+    const searchHistory =
+        document.getElementById("searchHistory");
+
+
+    /* ==========================================
+       SEND MESSAGE
+    ========================================== */
+
+    function sendMessage() {
+
+        const text =
+            messageInput.value.trim();
+
+        if (!text) return;
+
+
+        // Hide welcome screen
+
+        welcomeScreen.style.display = "none";
+
+
+        // User message
+
+        addMessage(
+            text,
+            "user"
+        );
+
+
+        // Clear input
+
+        messageInput.value = "";
+
+        autoResize();
+
+
+        /*
+            Demo assistant response.
+
+            Replace this section with your backend/API
+            when you connect the actual AI model.
+        */
+
+        setTimeout(() => {
+
+            addMessage(
+                "This is a demo response. Connect your backend or AI model here to generate real responses.",
+                "assistant"
+            );
+
+        }, 700);
+
+    }
+
+
+    /* ==========================================
+       ADD MESSAGE
+    ========================================== */
+
+    function addMessage(
+        text,
+        sender
+    ) {
+
+        const message =
+            document.createElement("div");
+
+        message.classList.add(
+            "message",
+            sender
+        );
+
+
+        if (sender === "assistant") {
+
+            message.innerHTML = `
+
+                <div class="message-avatar">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+
+                <div class="message-content">
+
+                    <div class="message-name">
+                        AI Assistant
+                    </div>
+
+                    <div class="message-text">
+                        ${text}
+                    </div>
+
+                </div>
+
+            `;
+
+        } else {
+
+            message.innerHTML = `
+
+                <div class="message-content">
+
+                    <div class="message-text">
+                        ${text}
+                    </div>
+
+                </div>
+
+                <div class="message-avatar user-avatar">
+                    M
+                </div>
+
+            `;
+
+        }
+
+
+        messagesContainer.appendChild(message);
+
+
+        // Scroll to bottom
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+
+    }
+
+
+    /* ==========================================
+       ENTER TO SEND
+    ========================================== */
+
+    messageInput.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                sendMessage();
+
+            }
+
+        }
+    );
+
+
+    sendBtn.addEventListener(
+        "click",
+        sendMessage
+    );
+
+
+    /* ==========================================
+       AUTO RESIZE TEXTAREA
+    ========================================== */
+
+    messageInput.addEventListener(
+        "input",
+        autoResize
+    );
+
+
+    function autoResize() {
+
+        messageInput.style.height = "auto";
+
+        messageInput.style.height =
+            Math.min(
+                messageInput.scrollHeight,
+                180
+            ) + "px";
+
+    }
+
+
+    /* ==========================================
+       NEW CHAT
+    ========================================== */
+
+    function newChat() {
+
+        messagesContainer.innerHTML = "";
+
+        welcomeScreen.style.display =
+            "flex";
+
+        messageInput.value = "";
+
+        messageInput.focus();
+
+    }
+
+
+    newChatBtn.addEventListener(
+        "click",
+        newChat
+    );
+
+
+    mobileNewChat.addEventListener(
+        "click",
+        newChat
+    );
+
+
+    /* ==========================================
+       SIDEBAR TOGGLE
+    ========================================== */
+
+    sidebarToggle.addEventListener(
+        "click",
+        function() {
+
+            sidebar.classList.toggle(
+                "collapsed"
+            );
+
+        }
+    );
+
+
+    /* ==========================================
+       THEME TOGGLE
+    ========================================== */
+
+    themeToggle.addEventListener(
+        "change",
+        function() {
+
+            document.body.classList.toggle(
+                "dark-mode",
+                this.checked
+            );
+
+        }
+    );
+
+
+    /* ==========================================
+       CHAT HISTORY
+    ========================================== */
+
+    chatHistory.addEventListener(
+        "click",
+        function(event) {
+
+            const item =
+                event.target.closest(
+                    ".history-item"
+                );
+
+            if (!item) return;
+
+
+            document
+                .querySelectorAll(
+                    ".history-item"
+                )
+                .forEach(
+                    element =>
+                        element.classList.remove(
+                            "active"
+                        )
+                );
+
+
+            item.classList.add("active");
+
+        }
+    );
+
+
+    /* ==========================================
+       SEARCH HISTORY
+    ========================================== */
+
+    searchHistory.addEventListener(
+        "input",
+        function() {
+
+            const query =
+                this.value.toLowerCase();
+
+
+            document
+                .querySelectorAll(
+                    ".history-item"
+                )
+                .forEach(
+                    item => {
+
+                        const text =
+                            item
+                            .innerText
+                            .toLowerCase();
+
+
+                        item.style.display =
+                            text.includes(query)
+                                ? "flex"
+                                : "none";
+
+                    }
+                );
+
+        }
+    );
+
+
+    /* ==========================================
+       SUGGESTION CARDS
+    ========================================== */
+
+    document
+        .querySelectorAll(
+            ".suggestion-card"
+        )
+        .forEach(
+            card => {
+
+                card.addEventListener(
+                    "click",
+                    function() {
+
+                        const text =
+                            this
+                            .querySelector(
+                                "strong"
+                            )
+                            .innerText;
+
+
+                        messageInput.value =
+                            `Help me with ${text.toLowerCase()}.`;
+
+                        messageInput.focus();
+
+                        autoResize();
+
+                    }
+                );
+
+            }
+        );
+
+</script>
+
+</body>
+</html>
